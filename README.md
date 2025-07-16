@@ -12,7 +12,7 @@ This repository contains a set of scripts for provisioning and configuring multi
     *   OpenVPN
     *   A VNC server
 *   **Custom VNC Ports:** Each VM is assigned a unique VNC port, starting from 5901.
-*   **Automatic OpenVPN Connection:** Each VM automatically connects to an OpenVPN server on boot.
+*   **Automatic OpenVPN Connection:** Each VM automatically connects to a unique OpenVPN server on boot.
 
 ## How to Use
 
@@ -61,8 +61,8 @@ If you are running your Ubuntu desktop on a virtual machine, you must enable nes
 ### 4. Provision the Virtual Machines
 
 1.  Download the Ubuntu 22.04 Desktop ISO image from the official website: [https://ubuntu.com/download/desktop](https://ubuntu.com/download/desktop)
-2.  Open the `provision_vms.sh` script in a text editor and update the `ISO_PATH` variable to the path of the downloaded ISO file.
-3.  Open the `configure_vm.sh` script in a text editor and update the `OVPN_FILE` variable to the path of your `.ovpn` file.
+2.  Create a directory and place your `.ovpn` files in it.
+3.  Open the `provision_vms.sh` script in a text editor and update the `ISO_PATH` and `OVPN_DIR` variables to the correct paths.
 4.  Make the scripts executable:
 
     ```bash
@@ -95,8 +95,8 @@ The OpenVPN connection will also be automatically established. You can verify th
 ## To-Do List
 
 *   [ ] Download the Ubuntu 22.04 Desktop ISO image.
-*   [ ] Update the `ISO_PATH` variable in the `provision_vms.sh` script.
-*   [ ] Update the `OVPN_FILE` variable in the `configure_vm.sh` script.
+*   [ ] Create a directory and place your `.ovpn` files in it.
+*   [ ] Update the `ISO_PATH` and `OVPN_DIR` variables in the `provision_vms.sh` script.
 *   [ ] Run the `install_kvm.sh` script.
 *   [ ] Run the `provision_vms.sh` script.
 *   [ ] Complete the Ubuntu installation for each VM.

@@ -11,6 +11,12 @@ NUM_VMS=10
 # official website and update this variable to the correct path.
 ISO_PATH="/path/to/ubuntu-22.04-desktop-amd64.iso"
 
+# Set the path to the directory containing the OpenVPN configuration files.
+#
+# **Important:** You must create a directory containing your .ovpn files and
+# update this variable to the correct path.
+OVPN_DIR="/path/to/your/ovpn/files"
+
 # Check if the ISO file exists.
 if [ ! -f "$ISO_PATH" ]; then
     echo "Error: ISO file not found at $ISO_PATH"
@@ -18,9 +24,28 @@ if [ ! -f "$ISO_PATH" ]; then
     exit 1
 fi
 
+# Check if the OpenVPN directory exists.
+if [ ! -d "$OVPN_DIR" ]; then
+    echo "Error: OpenVPN directory not found at $OVPN_DIR"
+    echo "Please create a directory containing your .ovpn files and update the OVPN_DIR variable in this script."
+    exit 1
+fi
+
+# Get a list of the OpenVPN configuration files.
+OVPN_FILES=("$OVPN_DIR"/*.ovpn)
+
+# Check if there are enough OpenVPN configuration files for the number of VMs.
+if [ ${#OVPN_FILES[@]} -lt $NUM_VMS ]; then
+    echo "Error: Not enough OpenVPN configuration files in $OVPN_DIR"
+    echo "Please add at least $NUM_VMS .ovpn files to the directory."
+    exit 1
+fi
+
 # Loop to create the VMs.
 for i in $(seq 1 $NUM_VMS)
 do
+    # Get the OpenVPN configuration file for this VM.
+    OVPN_FILE=${OVPN_FILES[$i-1]}
     # Set the VM name.
     VM_NAME="ubuntu-vm-$i"
 
@@ -52,6 +77,7 @@ do
         --graphics vnc,listen=0.0.0.0 \
         --noautoconsole \
         --cdrom $ISO_PATH \
+        --initrd-inject "$OVPN_FILE" \
         --initrd-inject configure_vm.sh \
         --initrd-inject firstboot.sh \
         --extra-args "console=ttyS0,115200n8" &

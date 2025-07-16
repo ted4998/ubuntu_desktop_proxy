@@ -7,5 +7,11 @@
 # where `N` is the VM number.
 VM_NUMBER=$(hostname | sed 's/ubuntu-vm-//')
 
-# Run the configuration script, passing the VM number as an argument.
-/root/configure_vm.sh $VM_NUMBER
+# Get the path to the OpenVPN configuration file.
+# The OpenVPN configuration file is injected into the initrd by the
+# `provision_vms.sh` script and is available in the root directory.
+OVPN_FILE=$(find / -name "*.ovpn" -print -quit)
+
+# Run the configuration script, passing the VM number and the path to the
+# OpenVPN configuration file as arguments.
+/root/configure_vm.sh $VM_NUMBER "$OVPN_FILE"

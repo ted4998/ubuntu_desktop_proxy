@@ -2,8 +2,11 @@
 
 # This script configures a newly provisioned Ubuntu VM.
 
-# Get the VM number from the command-line argument.
+# Get the VM number from the first command-line argument.
 VM_NUMBER=$1
+
+# Get the path to the OpenVPN configuration file from the second command-line argument.
+OVPN_FILE=$2
 
 # Update the package lists and upgrade the installed packages.
 sudo apt-get update
@@ -50,10 +53,6 @@ sudo systemctl enable x11vnc.service
 sudo systemctl start x11vnc.service
 
 # Configure OpenVPN.
-#
-# **Important:** You must update this variable to the path of your .ovpn file.
-OVPN_FILE="/path/to/your/config.ovpn"
-
 # Check if the OpenVPN configuration file exists.
 if [ -f "$OVPN_FILE" ]; then
     # Copy the OpenVPN configuration file to the correct location.
