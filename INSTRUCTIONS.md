@@ -41,13 +41,16 @@ Before you begin, you need to enable nested virtualization on your ESXi host. Th
 
 1.  Download the Ubuntu 22.04 Desktop ISO image from the official website: [https://ubuntu.com/download/desktop](https://ubuntu.com/download/desktop)
 2.  Open the `provision_vms.sh` script in a text editor and update the `ISO_PATH` variable to the path of the downloaded ISO file.
-3.  Make the script executable:
+3.  Open the `configure_vm.sh` script in a text editor and update the `OVPN_FILE` variable to the path of your `.ovpn` file.
+4.  Make the scripts executable:
 
     ```bash
     chmod +x provision_vms.sh
+    chmod +x configure_vm.sh
+    chmod +x firstboot.sh
     ```
 
-4.  Run the script:
+5.  Run the provisioning script:
 
     ```bash
     ./provision_vms.sh
@@ -55,30 +58,15 @@ Before you begin, you need to enable nested virtualization on your ESXi host. Th
 
     This will start the process of creating the 10 virtual machines. You can monitor the progress using the `virsh list --all` command.
 
-## 4. Configure the Virtual Machines
-
-Once the virtual machines have been created, you need to configure each one individually.
+## 4. Complete the Ubuntu Installation
 
 1.  Open Virtual Machine Manager (`virt-manager`).
 2.  For each VM, open the console and complete the Ubuntu installation.
-3.  Once the installation is complete, open a terminal in the VM and run the following commands to make the `configure_vm.sh` script executable:
 
-    ```bash
-    chmod +x configure_vm.sh
-    ```
+## 5. Connect to the Virtual Machines
 
-4.  Run the script:
+Once the Ubuntu installation is complete, the `configure_vm.sh` script will automatically run on the first boot. This will install Telegram, OpenVPN, and a VNC server on the VM.
 
-    ```bash
-    ./configure_vm.sh
-    ```
+You can connect to each VM using a VNC client. The VNC port for each VM will be `5900 + VM_NUMBER`. For example, `ubuntu-vm-1` will be accessible on port `5901`, `ubuntu-vm-2` will be accessible on port `5902`, and so on.
 
-    This will install Telegram, OpenVPN, and a VNC server on the VM.
-
-5.  You will be prompted to set a password for the VNC server.
-
-6.  You will need to manually configure OpenVPN with your `.ovpn` file.
-
-7.  You can now connect to the VM using a VNC client. The VNC server will be running on port 5900.
-
-Repeat these steps for each of the 10 virtual machines.
+The OpenVPN connection will also be automatically established. You can verify the connection by running the `ifconfig` command in the VM and checking for a `tun0` interface.

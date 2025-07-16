@@ -30,7 +30,10 @@ do
         --network bridge=virbr0,mac=$MAC_ADDRESS \
         --graphics vnc,listen=0.0.0.0 \
         --noautoconsole \
-        --cdrom $ISO_PATH &
+        --cdrom $ISO_PATH \
+        --initrd-inject configure_vm.sh \
+        --initrd-inject firstboot.sh \
+        --extra-args "console=ttyS0,115200n8" &
 done
 
 echo "VM creation process started. It may take some time for all VMs to be created."
